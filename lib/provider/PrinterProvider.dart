@@ -161,44 +161,45 @@ class PrinterProvider with ChangeNotifier {
     if(sukses){
       // status simpan data
       stSimpanData = true;
-      // print(transaksi);
-      // bool? isConnected = await bluetooth.isConnected;
-      // if (isConnected == true) {
-      //   bluetooth.printCustom("TOKO SAMEERA", 3, 1);
-      //   bluetooth.printCustom("SAMEERA 1", 1, 1);
-      //   bluetooth.printCustom(DateFormat('MM/dd/yyyy, hh:mm:ss a').format(DateTime.now()), 0, 1);
-      //   bluetooth.printCustom("=============================", 1, 1);
-      //   bluetooth.printCustom("| Item          |Qty|  Price |", 0, 0);
-      //   bluetooth.printCustom("=============================", 1, 1);
-
-      //   for (var item in transaksi['items']) {
-      //     final nama = item['barang_master']['barang_nama'];
-      //     final harga = item['barang_master']['barang_harga_jual'];
-      //     final qty = item['qty'];
-      //     final subtotal = item['subTotal'];
-      //     // Baris nama barang (bisa panjang, pindah baris)
-      //     bluetooth.printCustom("| ${nama}", 0, 0);
-      //     // Baris harga + qty + subtotal, rata kanan
-      //     final hargaStr = rupiah(int.parse(harga)).padRight(9);
-      //     final qtyStr = qty.toString().padLeft(2);
-      //     final subStr = rupiah(int.parse(subtotal)).padLeft(10);
-      //     bluetooth.printCustom("| ${hargaStr} |$qtyStr| $subStr |", 0, 0);
-      //   }
-
-      //   bluetooth.printCustom("=============================", 1, 1);
-      //   bluetooth.printCustom("| Total".padRight(22) + rupiah(transaksi['total']).padLeft(10) + " |", 0, 0);
-      //   bluetooth.printCustom("-----------------------------", 1, 1);
-      //   bluetooth.printCustom("| Bayar".padRight(22) + rupiah(transaksi['bayar']).padLeft(10) + " |", 0, 0);
-      //   bluetooth.printCustom("| Kembalian".padRight(19) + rupiah(transaksi['kembalian']).padLeft(10) + " |", 0, 0);
-      //   bluetooth.printCustom("=============================", 1, 1);
-      //   bluetooth.printCustom("     Terimakasih", 2, 1);
-      //   bluetooth.printNewLine();
-      //   bluetooth.paperCut();
-      //   // print(transaksi['bayar']);
-      //   // print(transaksi['kembalian']);
-      // } else {
-      //   print("Printer belum terkoneksi!");
-      // }
+      bool? isConnected = await bluetooth.isConnected;
+      if (isConnected == true) {
+        bluetooth.printCustom("TOKO SAMEERA", 3, 1);
+        bluetooth.printCustom("SAMEERA 1", 1, 1);
+        bluetooth.printCustom(DateFormat('MM/dd/yyyy, hh:mm:ss a').format(DateTime.now()), 0, 1);
+        bluetooth.printCustom("=============================", 1, 1);
+        bluetooth.printCustom("| Item          |Qty|  Price |", 0, 0);
+        bluetooth.printCustom("=============================", 1, 1);
+        for (var item in transaksi['items']) {
+          // print(item['barang_nama']);
+          // final  = item['barang_nama'];
+          // final harga = item['barang_harga_jual'];
+          // final qty = item['qty'];
+          // final subtotal = item['subTotal'];
+          // Baris nama barang (bisa panjang, pindah baris)
+          // print(nama);
+          // bluetooth.printCustom("| Fajarr", 0, 0);
+          bluetooth.printCustom("| ${item['barang_master']['barang_nama']}", 0, 0);
+          // Baris harga + qty + subtotal, rata kanan
+          final hargaStr = rupiah(int.parse(item['barang_master']['barang_harga_jual'])).padRight(9);
+          final qtyStr = item['qty'].toString().padLeft(2);
+          final subStr = rupiah(int.parse(item['subTotal'])).padLeft(10);
+          bluetooth.printCustom("| ${hargaStr} |$qtyStr| $subStr |", 0, 0);
+        }
+        bluetooth.printCustom("=============================", 1, 1);
+        bluetooth.printCustom("| " + "Total".padRight(17) + rupiah(transaksi['totalBelanja']).padLeft(10) + " |",0,0);
+        bluetooth.printCustom("-----------------------------", 1, 1);
+        bluetooth.printCustom("| " + "Bayar".padRight(17) + rupiah(int.parse(transaksi['bayar'])).padLeft(10) + " |", 0, 0);
+        bluetooth.printCustom("| " + "Kembalian".padRight(17) + rupiah(transaksi['kembalian']).padLeft(10) + " |", 0, 0);
+        bluetooth.printCustom("=============================", 1, 1);
+        // bluetooth.printCustom("     Terimakasih", 2, 1);
+        bluetooth.printCustom("Terimakasih", 3, 1);
+        bluetooth.printNewLine();
+        bluetooth.paperCut();
+        // print(transaksi['bayar']);
+        // print(transaksi['kembalian']);
+      } else {
+        print("Printer belum terkoneksi!");
+      }
     } else {
       stSimpanData = false;
       print('Simpan data gagal!');
@@ -207,4 +208,54 @@ class PrinterProvider with ChangeNotifier {
       'simpanData': stSimpanData
     };
   }
+
+  Future<Map<String, dynamic>> printRiwayatNota(Map<String, dynamic> transaksi) async {
+    // status simpan data
+    // print(transaksi['items']);
+    // print('sini');
+    bool? isConnected = await bluetooth.isConnected;
+    if (isConnected == true) {
+      bluetooth.printCustom("TOKO SAMEERA", 3, 1);
+      bluetooth.printCustom("SAMEERA 1", 1, 1);
+      bluetooth.printCustom(DateFormat('MM/dd/yyyy, hh:mm:ss a').format(DateTime.now()), 0, 1);
+      bluetooth.printCustom("=============================", 1, 1);
+      bluetooth.printCustom("| Item          |Qty|  Price |", 0, 0);
+      bluetooth.printCustom("=============================", 1, 1);
+      print(transaksi);
+      for (var item in transaksi['items']) {
+        // print(item['barang_nama']);
+        // final  = item['barang_nama'];
+        // final harga = item['barang_harga_jual'];
+        // final qty = item['qty'];
+        // final subtotal = item['subTotal'];
+        // Baris nama barang (bisa panjang, pindah baris)
+        // print(nama);
+        // bluetooth.printCustom("| Fajarr", 0, 0);
+        bluetooth.printCustom("| ${item['barang_nama']}", 0, 0);
+        // Baris harga + qty + subtotal, rata kanan
+        final hargaStr = rupiah(int.parse(item['barang_grosir_harga_jual'])).padRight(9);
+        final qtyStr = item['qty'].toString().padLeft(2);
+        final subStr = rupiah(int.parse(item['subTotal'])).padLeft(10);
+        bluetooth.printCustom("| ${hargaStr} |$qtyStr| $subStr |", 0, 0);
+      }
+      bluetooth.printCustom("=============================", 1, 1);
+      bluetooth.printCustom("| " + "Total".padRight(17) + rupiah(transaksi['totalBelanja']).padLeft(10) + " |",0,0);
+      bluetooth.printCustom("-----------------------------", 1, 1);
+      bluetooth.printCustom("| " + "Bayar".padRight(17) + rupiah(transaksi['bayar']).padLeft(10) + " |", 0, 0);
+      bluetooth.printCustom("| " + "Kembalian".padRight(17) + rupiah(transaksi['kembalian']).padLeft(10) + " |", 0, 0);
+      bluetooth.printCustom("=============================", 1, 1);
+      // bluetooth.printCustom("     Terimakasih", 2, 1);
+      bluetooth.printCustom("Terimakasih", 3, 1);
+      bluetooth.printNewLine();
+      bluetooth.paperCut();
+      // print(transaksi['bayar']);
+      // print(transaksi['kembalian']);
+    } else {
+      print("Printer belum terkoneksi!");
+    }
+    return {
+      'simpanData': true
+    };
+  }
+
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kasir/provider/PrinterProvider.dart';
+import 'package:provider/provider.dart';
 
-class DialogNota extends StatelessWidget {
 
-  String formatRupiah(num number) {
-    return 'Rp ${number.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
-  }
-  
+class DialogNota extends StatefulWidget {
+
   final Map<dynamic, dynamic> cartDetail;
 
   const DialogNota({
@@ -14,11 +13,57 @@ class DialogNota extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DialogNota> createState() => _DialogNotaState();
+}
+
+class _DialogNotaState extends State<DialogNota> {
+  String formatRupiah(num number) {
+    return 'Rp ${number.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
+  
+
+   @override
+  void initState() {
+    super.initState();
+    // ketika load pertama kali
+    Future.microtask(() => Provider.of<PrinterProvider>(context, listen: false).loadSavedPrinter());
+  }
+
+  
+
+  @override
   Widget build(BuildContext context) {
+
+    final printer = Provider.of<PrinterProvider>(context);
+  
+    void handlePrintNota() async {
+      print('cetakk');
+      var resTotal = 0;
+      // num total = (widget.cartDetail['cartData'] as List).fold(0, (acc, item) => acc + (item['qty'] * item['harga']));
+      widget.cartDetail['cartData'].forEach((val) {
+        resTotal += int.parse(val['subTotal']);
+      });
+
+
+      // params
+      final transaksi = {
+        'items': widget.cartDetail['cartData'],
+        'totalBelanja': resTotal,
+        'bayar' : int.parse(widget.cartDetail['bayar']),
+        'kembalian' : widget.cartDetail['kembalian'],
+        'pelanggan' : widget.cartDetail['pelanggan'],
+      };
+      // print(transaksi);
+      // print('transaksi');
+      Map<String, dynamic> status = await printer.printRiwayatNota(transaksi);
+    }
+
+  // 
     var no = 1;
     int grandTotal = 0;
     // print(cartDetail['cartData']);
-    List<TableRow> rows = cartDetail['cartData'].map<TableRow>((row) {
+    List<TableRow> rows = widget.cartDetail['cartData'].map<TableRow>((row) {
       grandTotal += int.parse(row['subTotal']);
         return TableRow(
           children: [
@@ -89,7 +134,7 @@ class DialogNota extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text(formatRupiah(int.parse(cartDetail['bayar'])), style: TextStyle(color: Colors.red, fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+            child: Text(formatRupiah(int.parse(widget.cartDetail['bayar'])), style: TextStyle(color: Colors.red, fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
           ),
         ]
       )
@@ -107,7 +152,7 @@ class DialogNota extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text(formatRupiah(cartDetail['kembalian']), style: TextStyle(color: Colors.green, fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+            child: Text(formatRupiah(widget.cartDetail['kembalian']), style: TextStyle(color: Colors.green, fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
           ),
         ]
       )
@@ -116,8 +161,8 @@ class DialogNota extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 10,),
-          Text("Nota : ${cartDetail['tanggal']} / ${cartDetail['jam']}", style: TextStyle(fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold),),
-          Text("Pelanggan : ${cartDetail['pelanggan']}", style: TextStyle(fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold),),
+          Text("Nota : ${widget.cartDetail['tanggal']} / ${widget.cartDetail['jam']}", style: TextStyle(fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold),),
+          Text("Pelanggan : ${widget.cartDetail['pelanggan']}", style: TextStyle(fontSize: 12,fontFamily: "Poppins", fontWeight: FontWeight.bold),),
           Expanded(
             flex: 11,
             child: SingleChildScrollView(
@@ -180,7 +225,7 @@ class DialogNota extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () => { print('cetakk') },
+                    onPressed: () => { handlePrintNota() },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(5)

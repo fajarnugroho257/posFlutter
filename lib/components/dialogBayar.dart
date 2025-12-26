@@ -29,12 +29,6 @@ class _DialogBayarState extends State<DialogBayar> {
     super.initState();
     // ketika load pertama kali
     Future.microtask(() => Provider.of<PrinterProvider>(context, listen: false).loadSavedPrinter());
-    // nominalController.addListener(() {
-    //   if (nominalController.text == "0") {
-    //     nominalController.clear();
-    //   }
-    // });
-    // 
   }
 
   String input = '0';
@@ -267,6 +261,9 @@ class _DialogBayarState extends State<DialogBayar> {
                               showDialog(context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)
+                                    ),
                                     title: Text('Error', style: TextStyle(fontSize: 16, fontFamily: "Poppins", fontWeight: FontWeight.bold),),
                                     content: Text('Nominal yang anda masukkan kurang dari total tagihan.', style: TextStyle(fontSize: 14, fontFamily: "Poppins"),),
                                     actions: [

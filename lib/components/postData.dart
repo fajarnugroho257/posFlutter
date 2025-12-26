@@ -4,11 +4,12 @@ import 'package:hive/hive.dart';
 
 
 class PostData extends StatelessWidget {
-  PostData({super.key, required this.postTransaksi, required this.cabang_id, required this.dataKasir, required this.onSuccess});
+  PostData({super.key, required this.postTransaksi, required this.cabang_id, required this.dataKasir, required this.onSuccess, required this.statusLoading});
   final List postTransaksi;
   final String cabang_id;
   final Map<dynamic, dynamic> dataKasir;
   final Function() onSuccess;
+  final Function(bool status) statusLoading;
 
   final box = Hive.box('dataBox');
 
@@ -30,6 +31,7 @@ class PostData extends StatelessWidget {
     }
     // print(datasUploadFalse);
     try {
+      await statusLoading(true);
       final response = await ApiService().postTransaksi('post-data-transaksi', {
         'cabang_id' : cabang_id,
         'postTransaksi' : datasUploadFalse,
@@ -53,6 +55,7 @@ class PostData extends StatelessWidget {
         }
         // jalankan state di home
         await onSuccess();
+        await statusLoading(false);
         // 
         return {
           'status' : true,

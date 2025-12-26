@@ -50,6 +50,9 @@ class _BayarSekarangState extends State<BayarSekarang> {
               showDialog(context: context,
                 builder: (context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
                     title: Text('Error', style: TextStyle( color: Colors.red, fontSize: 16, fontFamily: "Poppins", fontWeight: FontWeight.bold),),
                     content: Text('Total belanja masih ${totalBelanja}', style: TextStyle(fontSize: 14, fontFamily: "Poppins"),),
                     actions: [

@@ -9,11 +9,15 @@ import 'package:kasir/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kasir/provider/PrinterProvider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('dataBox');
+
+  // Inisialisasi locale Indonesia
+  await initializeDateFormatting('id_ID', null);
 
   runApp(
     MultiProvider(

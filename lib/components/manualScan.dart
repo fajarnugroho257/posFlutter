@@ -28,10 +28,6 @@ class _ManualScanState extends State<ManualScan> {
     loadBarang();
   } 
 
-  // array temp cart
-
-  final TextEditingController searchController = TextEditingController();
-
   int jml = 0;
   handleInput(String val) {
     jml = val.length;
@@ -52,11 +48,15 @@ class _ManualScanState extends State<ManualScan> {
               duration: Duration(seconds: 1),
             ),
           );
+          handleClearInput();
           return true;
         } else {
           showDialog(context: context,
             builder: (context) {
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
                 title: Text('Error', style: TextStyle(fontSize: 16, fontFamily: "Poppins", fontWeight: FontWeight.bold, color: Colors.red),),
                 content: Text('${hasil['barang_master']['barang_nama']} sudah tersedia di keranjang silahkan untuk menambah QTY', style: TextStyle(fontSize: 14, fontFamily: "Poppins"),),
                 actions: [
@@ -70,31 +70,69 @@ class _ManualScanState extends State<ManualScan> {
               );
             }
           );
+          handleClearInput();
           return false;
         }
         // print(respon);
+      } else {
+        print('tidak ada');
       }
     }
-    
+  }
+
+  // handle text search
+  final TextEditingController searchController = TextEditingController();
+  FocusNode focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void handleClearInput() {
+    searchController.clear();
+    FocusScope.of(context).requestFocus(focusNode);
   }
 
   @override
-  Widget build(BuildContext context) {
-    final inputController = TextEditingController();
-    FocusNode focusNode = FocusNode();
-    // print(daftarBarang);
-    return TextField(
-      // readOnly: true,
-      focusNode: focusNode,
-      controller: inputController,
-      autofocus: true,
-      keyboardType: TextInputType.number,
-      style: TextStyle(fontFamily: "Poppins"),
-      decoration: InputDecoration(
-        border: OutlineInputBorder()
-      ),
-      onChanged: handleInput,
+  Widget build(BuildContext context) {    
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+          // readOnly: true,
+            focusNode: focusNode,
+            controller: searchController,
+            autofocus: true,
+            keyboardType: TextInputType.number,
+            style: TextStyle(fontFamily: "Poppins"),
+            decoration: InputDecoration(
+              border: OutlineInputBorder()
+            ),
+            onChanged: handleInput,
+          ),
+        ),
+        SizedBox(width: 5,),
+        SizedBox(
+          height: 48,
+          width: 48,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              padding: EdgeInsets.all(4),
+              backgroundColor: Colors.red
+            ),
+            onPressed: () => {
+              handleClearInput()
+            },
+            child: Icon(Icons.close, color: Colors.white)
+          ),
+        )
+      ]
     );
-    
   }
 }

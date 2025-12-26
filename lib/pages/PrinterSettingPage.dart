@@ -26,7 +26,7 @@ class _PrinterSettingPageState extends State<PrinterSettingPage> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 0, 149, 255),
         title: Center(
-          child: Text('POS Kasir', 
+          child: Text('Printer', 
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Poppins',
@@ -76,6 +76,11 @@ class _PrinterSettingPageState extends State<PrinterSettingPage> {
                 onPressed: printer.testPrint,
                 icon: const Icon(Icons.print),
                 label: const Text("Tes Cetak"),
+              ),
+              ElevatedButton.icon(
+                onPressed: printer.disconnect,
+                icon: const Icon(Icons.print),
+                label: const Text("Reset"),
               ),
             ],
           ),

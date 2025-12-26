@@ -18,7 +18,7 @@ class SideBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text("Menu Utama", style: TextStyle(fontFamily: "Poppins", fontSize: 15, fontWeight: FontWeight.bold),),
+              child: Center(child: Text("Menu Utama", style: TextStyle(fontFamily: "Poppins", fontSize: 15, fontWeight: FontWeight.bold),)),
             ),
           ),
           // Menu List
@@ -62,6 +62,9 @@ class SideBar extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
                     title: Text('Keluar..!', style: TextStyle(color: Colors.red, fontSize: 16, fontFamily: "Poppins", fontWeight: FontWeight.bold),),
                     content: Text('Apakah anda yakin akan keluar', style: TextStyle(fontSize: 14, fontFamily: "Poppins"),),
                     actions: [
